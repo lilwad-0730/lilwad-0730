@@ -674,3 +674,373 @@
 </body>
 
 </html>
+</html><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿嬤的陽台鄰居 - 繪本故事</title>
+    <style>
+        /* ================= 高齡友善色彩與字體設定 ================= */
+        :root {
+            --bg-color: #FDF8F5;
+            --text-color: #4A3B32;
+            --btn-primary: #F29A62;
+            --btn-primary-hover: #E3874E;
+            --btn-secondary: #87A878;
+            --btn-secondary-hover: #759567;
+            --panel-bg: #FFF4EB;
+            --book-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, "PingFang TC", "LiHei Pro", "Microsoft JhengHei", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* 防止翻頁時超出螢幕產生水平捲軸 */
+            user-select: none; /* 防止滑動時不小心選取到文字 */
+        }
+
+        /* ================= 繪本舞台 (3D 透視) ================= */
+        .book-stage {
+            perspective: 2000px;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        /* 實際的每一頁 */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--book-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            
+            /* 翻頁動畫核心設定 */
+            transform-origin: left center;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.7s ease-in-out;
+            backface-visibility: hidden;
+            will-change: transform, opacity;
+            cursor: grab;
+        }
+
+        .page:active {
+            cursor: grabbing;
+        }
+
+        /* 當頁面被翻過去時的狀態 */
+        .page.flipped {
+            transform: rotateY(-90deg) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 用來撐開外部容器高度的隱藏層 (解決 absolute 脫離文件流的問題) */
+        .page-dummy {
+            position: relative;
+            visibility: hidden;
+            pointer-events: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= 頁面內容排版 ================= */
+        .image-area {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #EAE3DC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            pointer-events: none; /* 讓滑動事件更容易穿透給 page */
+        }
+
+        .image-placeholder-text {
+            font-size: 28px;
+            color: #A69C95;
+            font-weight: bold;
+            border: 4px dashed #D1C7C0;
+            padding: 20px 40px;
+            border-radius: 16px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .text-area {
+            padding: 40px 50px;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            pointer-events: none;
+        }
+
+        .story-text {
+            font-size: 32px;
+            line-height: 1.6;
+            text-align: center;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* ================= 操作按鈕 ================= */
+        .controls-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 24px;
+            min-height: 60px;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.1s, background-color 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-prev { background-color: var(--btn-secondary); color: white; }
+        .btn-prev:hover:not(:disabled) { background-color: var(--btn-secondary-hover); }
+
+        .btn-next { background-color: var(--btn-primary); color: white; }
+        .btn-next:hover:not(:disabled) { background-color: var(--btn-primary-hover); }
+
+        .btn-start {
+            background-color: #E76F51;
+            color: white;
+            display: none;
+            animation: popIn 0.5s ease-out forwards;
+        }
+        .btn-start:hover { background-color: #D65A3D; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .page-indicator {
+            font-size: 20px;
+            color: #A69C95;
+            font-weight: bold;
+        }
+        
+        .swipe-hint {
+            color: #A69C95;
+            font-weight: bold;
+            font-size: 22px;
+            margin-top: 15px;
+            animation: floatLeftRight 3s infinite;
+        }
+
+        @keyframes floatLeftRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-10px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 3D 繪本舞台 -->
+    <div class="book-stage" id="book-stage">
+        <!-- JS 會在這裡動態生成所有的頁面 -->
+    </div>
+
+    <!-- 底部操作列 -->
+    <div class="swipe-hint" id="swipe-hint">👆 試著向左滑動，或點擊按鈕來翻頁</div>
+    <div class="controls-container">
+        <button id="btn-prev" class="btn-prev" onclick="prevPage()" disabled>⬅️</button>
+        <div class="page-indicator" id="page-indicator">1 / 1</div>
+        <button id="btn-next" class="btn-next" onclick="nextPage()">➡️</button>
+        <button id="btn-start" class="btn-start" onclick="goToGame()">進入阿嬤的陽台 🌻</button>
+    </div>
+
+<script>
+    // ================= 繪本故事內容資料庫 =================
+    const storyPages = [
+        {
+            text: "阿嬤的陽台上，有一座充滿魔法的小花圃。<br>這裡的花兒，都有自己的個性。",
+            imageNote: "【封面圖片】<br>阿嬤微笑看著陽台的花圃"
+        },
+        {
+            text: "「阿嬤，為什麼有些花今天開了，明天卻休息了呢？」<br>阿嬤笑著說：「因為花兒也需要朋友呀！」",
+            imageNote: "【情境圖】<br>主角疑惑地指著一朵休息的花"
+        },
+        {
+            text: "「如果旁邊只有一個朋友，甚至沒有朋友，<br>花兒會覺得太孤單，明天就會先睡個覺。」",
+            imageNote: "【規則 1 - 孤單】<br>一朵孤單的花看起來有點沒精神"
+        },
+        {
+            text: "「但如果旁邊剛好有兩三個好鄰居，<br>大家聊聊天，陪伴剛剛好，花兒就會開心綻放喔！」",
+            imageNote: "【規則 2 - 剛剛好】<br>三四朵花聚在一起開得很漂亮"
+        },
+        {
+            text: "「不過要注意喔，如果旁邊擠了太多朋友...<br>花兒會覺得太擁擠、喘不過氣，明天也要休息。」",
+            imageNote: "【規則 3 - 擁擠】<br>一群花擠在一起，中間的花滿頭大汗"
+        },
+        {
+            text: "「最神奇的是，如果有個空位，<br>旁邊剛好有三個好朋友在呼喚...<br>明天那裡就會奇蹟似地長出新花呢！」",
+            imageNote: "【規則 4 - 誕生】<br>三個花朵圍繞著一個空地，空地發出光芒"
+        },
+        {
+            text: "「大自然的規律是不是很有趣呢？<br>現在，換你來幫阿嬤照顧這些鄰居，<br>猜猜看明天花園會變成什麼樣子吧！」",
+            imageNote: "【結尾圖】<br>阿嬤遞給主角一個園藝小鏟子（或是種子）"
+        }
+    ];
+
+    let currentPage = 0;
+    const stage = document.getElementById('book-stage');
+
+    function initBook() {
+        const dummy = document.createElement('div');
+        dummy.className = 'page-dummy';
+        dummy.innerHTML = `
+            <div class="image-area"></div>
+            <div class="text-area"><p class="story-text">撐高度的文字<br>第二行</p></div>
+        `;
+        stage.appendChild(dummy);
+
+        for (let i = 0; i < storyPages.length; i++) {
+            const pageData = storyPages[i];
+            const pageEl = document.createElement('div');
+            pageEl.className = 'page';
+            pageEl.id = 'page-' + i;
+            pageEl.style.zIndex = storyPages.length - i;
+            
+            pageEl.innerHTML = `
+                <div class="image-area">
+                    <div class="image-placeholder-text">${pageData.imageNote}</div>
+                </div>
+                <div class="text-area">
+                    <p class="story-text">${pageData.text}</p>
+                </div>
+            `;
+            stage.appendChild(pageEl);
+        }
+
+        updateControls();
+    }
+
+    function nextPage() {
+        if (currentPage < storyPages.length - 1) {
+            const currentEl = document.getElementById('page-' + currentPage);
+            currentEl.classList.add('flipped');
+            currentPage++;
+            updateControls();
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            const prevEl = document.getElementById('page-' + currentPage);
+            prevEl.classList.remove('flipped');
+            updateControls();
+        }
+    }
+
+    function updateControls() {
+        document.getElementById('page-indicator').textContent = `${currentPage + 1} / ${storyPages.length}`;
+        document.getElementById('btn-prev').disabled = (currentPage === 0);
+
+        if (currentPage === storyPages.length - 1) {
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-start').style.display = 'block';
+            document.getElementById('swipe-hint').style.opacity = '0'; // 最後一頁藏起提示
+        } else {
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('swipe-hint').style.opacity = '1';
+        }
+    }
+
+    function goToGame() {
+        window.location.href = 'index.html'; 
+    }
+
+    // ================= 滑動翻頁邏輯 (支援滑鼠與觸控) =================
+    let startX = 0;
+    let isDragging = false;
+
+    stage.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+        isDragging = true;
+    });
+
+    stage.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        handleSwipe(startX, e.clientX);
+    });
+
+    stage.addEventListener('mouseleave', (e) => {
+        isDragging = false;
+    });
+
+    stage.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    });
+
+    stage.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        handleSwipe(startX, e.changedTouches[0].clientX);
+    });
+
+    function handleSwipe(start, end) {
+        const threshold = 40; // 最少滑動 40px 才算觸發
+        if (start - end > threshold) {
+            nextPage(); // 向左滑 -> 下一頁
+        } else if (end - start > threshold) {
+            prevPage(); // 向右滑 -> 上一頁
+        }
+    }
+
+    window.onload = initBook;
+
+</script>
+</body>
+</html>
