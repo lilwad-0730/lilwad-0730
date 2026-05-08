@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>阿嬤的陽台鄰居 - 繪本故事</title>
+    <title>?�嬤?�陽?�鄰�?- 繪本?��?</title>
     <style>
-        /* ================= 高齡友善色彩與字體設定 ================= */
+        /* ================= 高齡?��??�彩?��?體設�?================= */
         :root {
             --bg-color: #FDF8F5;
             --text-color: #4A3B32;
@@ -29,12 +29,12 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
-            /* 防止翻頁時超出螢幕產生水平捲軸 */
+            /* ?�止翻�??��??�螢幕產?�水平捲�?*/
             user-select: none;
-            /* 防止滑動時不小心選取到文字 */
+            /* ?�止滑�??��?小�??��??��?�?*/
         }
 
-        /* ================= 繪本舞台 (3D 透視) ================= */
+        /* ================= 繪本?�台 (3D ?��?) ================= */
         .book-stage {
             perspective: 2000px;
             width: 100%;
@@ -43,7 +43,7 @@
             margin-top: 20px;
         }
 
-        /* 實際的每一頁 */
+        /* 實�??��?一??*/
         .page {
             position: absolute;
             top: 0;
@@ -57,7 +57,7 @@
             flex-direction: column;
             overflow: hidden;
 
-            /* 翻頁動畫核心設定 */
+            /* 翻�??�畫?��?設�? */
             transform-origin: left center;
             transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.7s ease-in-out;
             backface-visibility: hidden;
@@ -69,14 +69,14 @@
             cursor: grabbing;
         }
 
-        /* 當頁面被翻過去時的狀態 */
+        /* ?��??�被翻�??��??��???*/
         .page.flipped {
             transform: rotateY(-90deg) scale(0.95);
             opacity: 0;
             pointer-events: none;
         }
 
-        /* 用來撐開外部容器高度的隱藏層 (解決 absolute 脫離文件流的問題) */
+        /* ?��??��?外部容器高度?�隱?�層 (�?�� absolute ?�離?�件流�??��?) */
         .page-dummy {
             position: relative;
             visibility: hidden;
@@ -86,7 +86,7 @@
             flex-direction: column;
         }
 
-        /* ================= 頁面內容排版 ================= */
+        /* ================= ?�面?�容?��? ================= */
         .image-area {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -96,7 +96,7 @@
             justify-content: center;
             position: relative;
             pointer-events: none;
-            /* 讓滑動事件更容易穿透給 page */
+            /* 讓�??��?件更容�?穿透給 page */
         }
 
         .image-placeholder-text {
@@ -110,32 +110,32 @@
             line-height: 1.4;
         }
 
-        /* ================= 遊戲互動網格 (繪本內嵌) ================= */
+        /* ================= ?�戲互�?網格 (繪本?��?) ================= */
         .interactive-grid-container {
             position: absolute;
-            /* 預設在正中央，您可以微調 top 和 left 來對齊您畫的圖 */
+            /* ?�設?�正中央，您?�以微調 top ??left 來�?齊您?��???*/
             top: 51.4%;
             left: 50.5%;
             transform: translate(-50%, -50%);
 
-            /* width 控制網格大小，可以改成您需要的比例 (例如 30% 或 300px) */
+            /* width ?�制網格大�?，可以改?�您?�要�?比�? (例�? 30% ??300px) */
             width: 24.5%;
             aspect-ratio: 1;
-            /* 保持正方形 */
+            /* 保�?�?���?*/
 
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
             gap: 0%;
-            /* 格子之間的空隙 (原本是 2%，已調小，可改為 0% 讓格子完全貼合) */
+            /* ?��?之�??�空??(?�本??2%，已調�?，可?�為 0% 讓格子�??�貼?? */
             z-index: 10;
             pointer-events: auto;
-            /* 重新啟用點擊，因為父層有 pointer-events: none */
+            /* ?�新?�用點�?，�??�父層�? pointer-events: none */
         }
 
         .interactive-cell {
             box-sizing: border-box;
-            background-color: transparent; /* 完全透明，不遮擋背景 */
+            background-color: transparent; /* 完全?��?，�??��??�景 */
             border: 2px solid transparent;
             border-radius: 8px;
             cursor: pointer;
@@ -144,13 +144,13 @@
             justify-content: center;
             font-size: 24px;
             line-height: 1;
-            overflow: visible; /* 讓右上角的標記可以完整超出邊界顯示 */
+            overflow: visible; /* 讓右上�??��?記可以�??��??��??�顯�?*/
             user-select: none;
             transition: all 0.2s;
         }
 
         .interactive-cell:hover {
-            background-color: rgba(255, 255, 255, 0.15); /* 輕微提亮，保留互動感但不遮擋 */
+            background-color: rgba(255, 255, 255, 0.15); /* 輕微?�亮，�??��??��?但�??��? */
         }
 
         .interactive-cell.active {
@@ -160,7 +160,7 @@
         }
 
         .interactive-cell.active::after {
-            content: '🌸';
+            content: '?��';
             position: absolute;
             top: -10px;
             right: -10px;
@@ -202,7 +202,7 @@
             background-color: rgba(231, 111, 81, 0.3) !important;
         }
 
-        /* ================= 操作按鈕 ================= */
+        /* ================= ?��??��? ================= */
         .controls-container {
             width: 100%;
             max-width: 800px;
@@ -291,33 +291,31 @@
 
 <body>
 
-    <!-- 3D 繪本舞台 -->
+    <!-- 3D 繪本?�台 -->
     <div class="book-stage" id="book-stage">
-        <!-- JS 會在這裡動態生成所有的頁面 -->
+        <!-- JS ?�在?�裡?��??��??�?��??�面 -->
     </div>
 
-    <!-- 底部操作列 -->
-    <div class="swipe-hint" id="swipe-hint">👆 試著向左滑動，或點擊按鈕來翻頁</div>
+    <!-- 底部?��???-->
+    <div class="swipe-hint" id="swipe-hint">?? 試�??�左滑�?，�?點�??��?來翻??/div>
     <div class="controls-container">
-        <button id="btn-prev" class="btn-prev" onclick="prevPage()" disabled>⬅️</button>
+        <button id="btn-prev" class="btn-prev" onclick="prevPage()" disabled>⬅�?</button>
         <div class="page-indicator" id="page-indicator">1 / 1</div>
-        <button id="btn-next" class="btn-next" onclick="nextPage()">➡️</button>
+        <button id="btn-next" class="btn-next" onclick="nextPage()">?��?</button>
     </div>
 
     <script>
-        // ================= 第 8 頁過關設定 (隨機生命遊戲機制) =================
+        // ================= �?8 ?��??�設�?(?��??�命?�戲機制) =================
         let page8InitialGrid = [];
         let page8Answer = [];
         let isPage8Solved = false;
-        let page8Result = null; // 紀錄過關或失敗
+        let page8Result = null; // 紀?��??��?失�?
 
-        // 自動產生隨機謎題，確保至少會有 1 朵新花綻放
-        function generateRandomPage8Puzzle() {
+        // ?��??��??��?謎�?，確保至少�???1 ?�新?�綻??        function generateRandomPage8Puzzle() {
             let hasNewFlower = false;
             while (!hasNewFlower) {
                 page8InitialGrid = Array(4).fill().map(() => Array(4).fill(0));
-                let numFlowers = Math.floor(Math.random() * 3) + 4; // 隨機 4 到 6 顆種子
-                for (let i = 0; i < numFlowers; i++) {
+                let numFlowers = Math.floor(Math.random() * 3) + 4; // ?��? 4 ??6 顆種�?                for (let i = 0; i < numFlowers; i++) {
                     let r, c;
                     do {
                         r = Math.floor(Math.random() * 4);
@@ -326,8 +324,7 @@
                     page8InitialGrid[r][c] = 1;
                 }
 
-                // 計算第二天答案
-                page8Answer = Array(4).fill().map(() => Array(4).fill(0));
+                // 計�?第�?天�?�?                page8Answer = Array(4).fill().map(() => Array(4).fill(0));
                 for (let r = 0; r < 4; r++) {
                     for (let c = 0; c < 4; c++) {
                         let neighbors = 0;
@@ -348,8 +345,7 @@
                     }
                 }
 
-                // 檢查是否真的有「新」花朵會誕生（原本是 0，第二天變 1）
-                for (let r = 0; r < 4; r++) {
+                // 檢查?�否?��??�「新?�花?��?誕�?（�??�是 0，第二天�?1�?                for (let r = 0; r < 4; r++) {
                     for (let c = 0; c < 4; c++) {
                         if (page8InitialGrid[r][c] === 0 && page8Answer[r][c] === 1) {
                             hasNewFlower = true;
@@ -358,53 +354,52 @@
                 }
             }
         }
-        generateRandomPage8Puzzle(); // 遊戲載入時先生成一次
-
-        // ================= 繪本故事內容資料庫 =================
+        generateRandomPage8Puzzle(); // ?�戲載入?��??��?一�?
+        // ================= 繪本?��??�容資�?�?=================
         const storyPages = [
             {
-                text: "阿嬤的陽台上，有一座充滿魔法的小花圃。<br>這裡的花兒，都有自己的個性。",
-                imageSrc: "屁眼派對/1.png"
+                text: "?�嬤?�陽?��?，�?一座�?滿�?法�?小花?��?br>?�裡?�花?��??��??�己?�個性�?,
+                imageSrc: "屁眼派�?/1.png"
             },
             {
-                text: "「阿嬤，為什麼有些花今天開了，明天卻休息了呢？」<br>阿嬤笑著說：「因為花兒也需要朋友呀！」",
-                imageSrc: "屁眼派對/2.png"
+                text: "?�阿嬤�??��?麼�?些花今天?��?，�?天卻休息了呢？�?br>?�嬤笑�?說�??��??�花?��??�要�??��?！�?,
+                imageSrc: "屁眼派�?/2.png"
             },
             {
-                text: "「如果旁邊只有一個朋友，甚至沒有朋友，<br>花兒會覺得太孤單，明天就會先睡個覺。」",
-                imageSrc: "屁眼派對/3.png"
+                text: "?��??��??�只?��??��??��??�至沒�??��?�?br>?��??�覺得太孤單，�?天就?��??�個覺?��?,
+                imageSrc: "屁眼派�?/3.png"
             },
             {
-                text: "「但如果旁邊剛好有兩三個好鄰居，<br>大家聊聊天，陪伴剛剛好，花兒就會開心綻放喔！」",
-                imageSrc: "屁眼派對/4.png"
+                text: "?��?如�??��??�好?�兩三個好?��?�?br>大家?��?天�??�伴?��?好�??��?就�??��?綻放?��???,
+                imageSrc: "屁眼派�?/4.png"
             },
             {
-                text: "「不過要注意喔，如果旁邊擠了太多朋友...<br>花兒會覺得太擁擠、喘不過氣，明天也要休息。」",
-                imageSrc: "屁眼派對/5.png"
+                text: "?��??��?注�??��?如�??��??��?太�??��?...<br>?��??�覺得太?��??��?不�?�???�天也�?休息?��?,
+                imageSrc: "屁眼派�?/5.png"
             },
             {
-                text: "「最神奇的是，如果有個空位，<br>旁邊剛好有三個好朋友在呼喚...<br>明天那裡就會奇蹟似地長出新花呢！」",
-                imageSrc: "屁眼派對/6.png"
+                text: "?��?神�??�是，�??��??�空位�?<br>?��??�好?��??�好?��??�呼??..<br>?�天??��就�?奇�?似地?�出?�花?��???,
+                imageSrc: "屁眼派�?/6.png"
             },
             {
-                text: "「大自然的規律是不是很有趣呢？<br>現在，換你來幫阿嬤照顧這些鄰居，<br>猜猜看明天花園會變成什麼樣子吧！」",
-                imageSrc: "屁眼派對/7.png"
+                text: "?�大?�然?��?律是不是很�?�?���?br>?�在，�?你�?幫阿嬤照顧這�??��?�?br>?��??��?天花?��?變�?什麼樣子吧！�?,
+                imageSrc: "屁眼派�?/7.png"
             },
             {
-                text: "（這是第 8 頁... 您可以隨時在此修改文字內容）",
-                imageSrc: "屁眼派對/8.png"
+                text: "（這是�?8 ??.. ?�可以隨?�在此修?��?字內容�?",
+                imageSrc: "屁眼派�?/8.png"
             },
             {
-                text: "（這是第 9 頁... 您可以隨時在此修改文字內容）",
-                imageSrc: "屁眼派對/9.png"
+                text: "（這是�?9 ??.. ?�可以隨?�在此修?��?字內容�?",
+                imageSrc: "屁眼派�?/9.png"
             },
             {
-                text: "（這是第 10 頁... 您可以隨時在此修改文字內容）",
-                imageSrc: "屁眼派對/10.png"
+                text: "（這是�?10 ??.. ?�可以隨?�在此修?��?字內容�?",
+                imageSrc: "屁眼派�?/10.png"
             },
             {
-                text: "準備好開始迎接挑戰了嗎？<br>點擊下方的按鈕進入花園吧！",
-                imageSrc: "屁眼派對/11.png"
+                text: "準�?好�?始�??��??��??��?<br>點�?下方?��??�進入?��??��?",
+                imageSrc: "屁眼派�?/11.png"
             }
         ];
 
@@ -427,23 +422,21 @@
                 pageEl.style.zIndex = storyPages.length - i;
                 let imageContent = '';
                 if (pageData.imageSrc) {
-                    // object-fit: contain 確保圖片不會被裁切，保持原本比例顯示在框內
-                    imageContent = `<img src="${pageData.imageSrc}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;" alt="繪本圖片">`;
+                    // object-fit: contain 確�??��?不�?被�??��?保�??�本比�?顯示?��???                    imageContent = `<img src="${pageData.imageSrc}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;" alt="繪本?��?">`;
                 } else {
                     imageContent = `<div class="image-placeholder-text">${pageData.imageNote}</div>`;
                 }
 
                 let interactiveOverlay = '';
-                // 如果是第 8 頁 (陣列 index 是 7)，就插入 4x4 的互動方格
-                if (i === 7) {
+                // 如�??�第 8 ??(??? index ??7)，就?�入 4x4 ?��??�方??                if (i === 7) {
                     let cellsHtml = '';
                     for (let r = 0; r < 4; r++) {
                         for (let c = 0; c < 4; c++) {
                             if (page8InitialGrid[r][c] === 1) {
-                                // 初始有種子：可點擊，加入標記表示預測它會開花 (存活)
-                                cellsHtml += `<div class="interactive-cell flower" style="background-color: transparent; border-color: transparent;" onclick="if(isPage8Solved) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;">🌱</div>`;
+                                // ?��??�種子�??��??��??�入標�?表示?�測它�??�花 (存活)
+                                cellsHtml += `<div class="interactive-cell flower" style="background-color: transparent; border-color: transparent;" onclick="if(isPage8Solved) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;">?��</div>`;
                             } else {
-                                // 初始為空：點擊可放花朵標記 (預測新生開花)
+                                // ?��??�空：�??�可?�花?��?�?(?�測?��??�花)
                                 cellsHtml += `<div class="interactive-cell" onclick="if(isPage8Solved) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;"></div>`;
                             }
                         }
@@ -476,11 +469,11 @@
                     let cell = cells[index];
                     let isActive = cell.classList.contains('active') ? 1 : 0;
 
-                    // 重置動畫
+                    // ?�置?�畫
                     cell.classList.remove('error-mark');
                     void cell.offsetWidth;
 
-                    // 玩家必須預測所有格子的開花狀態（包含空地新生，以及原本種子是否成功開花）
+                    // ?�家必�??�測?�?�格子�??�花?�?��??�含空地?��?，以?��??�種子是?��??��??��?
                     if (isActive !== page8Answer[r][c]) {
                         isCorrect = false;
                         cell.classList.add('error-mark');
@@ -495,26 +488,24 @@
                 isPage8Solved = true;
                 page8Result = 'success';
                 
-                // 成功才鎖定遊戲
-                cells.forEach(cell => {
+                // ?��??��?定�???                cells.forEach(cell => {
                     cell.style.cursor = "default";
                     cell.onclick = null;
                 });
 
-                hint.textContent = "✨ 預測完全正確！（請滑動進入第十頁）";
+                hint.textContent = "???�測完全�?��！�?請�??�進入第�??��?";
                 hint.style.color = "var(--btn-primary-hover)";
                 
-                // 答對後清除玩家的標記與初始種子，顯示真實的花朵圖片
-                index = 0;
+                // 答�?後�??�玩家�?標�??��?始種子�?顯示?�實?�花?��???                index = 0;
                 for (let r = 0; r < 4; r++) {
                     for (let c = 0; c < 4; c++) {
                         let cell = cells[index];
                         cell.classList.remove('active', 'flower');
                         cell.style.borderColor = "transparent";
-                        cell.textContent = ''; // 清除 🌱 文字
+                        cell.textContent = ''; // 清除 ?�� ?��?
                         
                         if (page8Answer[r][c] === 1) {
-                            // 隨機選用 flower/1.png 或 flower/2.png
+                            // ?��??�用 flower/1.png ??flower/2.png
                             let imgNum = Math.random() > 0.5 ? 1 : 2;
                             cell.innerHTML = `<img src="flower/${imgNum}.png" style="width: 100%; height: 100%; object-fit: contain; animation: popIn 0.5s ease-out;">`;
                         }
@@ -523,14 +514,13 @@
                 }
             } else {
                 page8Result = 'fail';
-                hint.textContent = "🌸 哎呀，預測錯誤了...（請滑動進入第九頁）";
+                hint.textContent = "?�� ?��?，�?測錯誤�?...（�?滑�??�入第�??��?";
                 hint.style.color = "#E76F51";
             }
         }
 
         function nextPage() {
-            // 如果是第 8 頁且還沒解開，且還沒顯示過錯誤提示，則攔截翻頁動作改為檢查答案
-            if (currentPage === 7 && !isPage8Solved) {
+            // 如�??�第 8 ?��??��?�??，�??��?顯示?�錯誤�?示�??��??�翻?��?作改?�檢?��?�?            if (currentPage === 7 && !isPage8Solved) {
                 if (page8Result !== 'fail') {
                     checkPage8();
                     return;
@@ -539,28 +529,27 @@
 
             if (currentPage < storyPages.length - 1) {
                 if (currentPage === 7) {
-                    // 第 8 頁翻頁時的分支邏輯
-                    if (page8Result === 'success') {
-                        // 成功：跳過第 9 頁 (index 8)，直接到第 10 頁 (index 9)
+                    // �?8 ?�翻?��??��??��?�?                    if (page8Result === 'success') {
+                        // ?��?：跳?�第 9 ??(index 8)，直?�到�?10 ??(index 9)
                         document.getElementById('page-7').classList.add('flipped');
                         document.getElementById('page-8').classList.add('flipped');
                         currentPage = 9;
                     } else if (page8Result === 'fail') {
-                        // 失敗：進到第 9 頁 (index 8)
+                        // 失�?：進到�?9 ??(index 8)
                         document.getElementById('page-7').classList.add('flipped');
                         currentPage = 8;
                     }
                 } else if (currentPage === 8 && page8Result === 'fail') {
-                    // 失敗路線：從第 9 頁 (index 8) 點擊下一頁時，退回第 8 頁 (index 7) 重新挑戰
+                    // 失�?路�?：�?�?9 ??(index 8) 點�?下�??��?，退?�第 8 ??(index 7) ?�新?�戰
                     document.getElementById('page-7').classList.remove('flipped');
                     currentPage = 7;
-                    page8Result = null; // 重置狀態，下次點擊時會重新檢查
+                    page8Result = null; // ?�置?�?��?下次點�??��??�新檢查
                     
                     const hint = document.getElementById('swipe-hint');
-                    hint.textContent = "👆 請修改您的預測，完成後點擊「下一頁」";
+                    hint.textContent = "?? 請修?�您?��?測�?完�?後�??�「�?一?��?;
                     hint.style.color = "#A69C95";
                 } else if (currentPage === 9 && page8Result === 'success') {
-                    // 成功路線：從第 10 頁 (index 9) 翻頁，進到結局第 11 頁 (index 10)
+                    // ?��?路�?：�?�?10 ??(index 9) 翻�?，進到結�?�?11 ??(index 10)
                     document.getElementById('page-9').classList.add('flipped');
                     currentPage = 10;
                 } else {
@@ -575,16 +564,16 @@
         function prevPage() {
             if (currentPage > 0) {
                 if (currentPage === 9 && page8Result === 'success') {
-                    // 從第 10 頁 (index 9) 成功路線返回第 8 頁 (index 7)
+                    // 從第 10 ??(index 9) ?��?路�?返�?�?8 ??(index 7)
                     currentPage = 7;
                     document.getElementById('page-7').classList.remove('flipped');
                     document.getElementById('page-8').classList.remove('flipped');
                 } else if (currentPage === 8 && page8Result === 'fail') {
-                    // 從第 9 頁 (index 8) 失敗路線返回第 8 頁 (index 7)
+                    // 從第 9 ??(index 8) 失�?路�?返�?�?8 ??(index 7)
                     currentPage = 7;
                     document.getElementById('page-7').classList.remove('flipped');
                 } else if (currentPage === 10 && page8Result === 'success') {
-                    // 從結局 (index 10) 成功路線返回第 10 頁 (index 9)
+                    // 從�?局 (index 10) ?��?路�?返�?�?10 ??(index 9)
                     currentPage = 9;
                     document.getElementById('page-9').classList.remove('flipped');
                 } else {
@@ -601,15 +590,13 @@
             document.getElementById('btn-prev').disabled = (currentPage === 0);
 
             const hint = document.getElementById('swipe-hint');
-            hint.style.color = "#A69C95"; // 恢復原本的顏色
-
+            hint.style.color = "#A69C95"; // ?�復?�本?��???
             if (currentPage === 7 && !isPage8Solved) {
-                hint.textContent = "👆 請在畫面上完成預測挑戰，完成後點擊「下一頁」";
+                hint.textContent = "?? 請在?�面上�??��?測�??��?完�?後�??�「�?一?��?;
                 hint.style.opacity = '1';
             } else if (currentPage === storyPages.length - 1) {
-                hint.style.opacity = '0'; // 最後一頁藏起提示
-            } else {
-                hint.textContent = "👆 試著向左滑動，或點擊按鈕來翻頁";
+                hint.style.opacity = '0'; // ?�後�??��?起�?�?            } else {
+                hint.textContent = "?? 試�??�左滑�?，�?點�??��?來翻??;
                 hint.style.opacity = '1';
             }
 
@@ -620,7 +607,7 @@
             }
         }
 
-        // ================= 滑動翻頁邏輯 (支援滑鼠與觸控) =================
+        // ================= 滑�?翻�??�輯 (?�援滑�??�觸?? =================
         let startX = 0;
         let isDragging = false;
 
@@ -651,21 +638,17 @@
         });
 
         function handleSwipe(start, end) {
-            const threshold = 40; // 最少滑動 40px 才算觸發
+            const threshold = 40; // ?�少�???40px ?��?觸發
             if (start - end > threshold) {
-                nextPage(); // 向左滑 -> 下一頁
-            } else if (end - start > threshold) {
-                prevPage(); // 向右滑 -> 上一頁
-            }
+                nextPage(); // ?�左�?-> 下�???            } else if (end - start > threshold) {
+                prevPage(); // ?�右�?-> 上�???            }
         }
 
-        // ================= 鍵盤方向鍵翻頁邏輯 =================
+        // ================= ?�盤?��??�翻?��?�?=================
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === ' ') {
-                nextPage(); // 右鍵或空白鍵 -> 下一頁
-            } else if (e.key === 'ArrowLeft') {
-                prevPage(); // 左鍵 -> 上一頁
-            }
+                nextPage(); // ?�鍵?�空?�鍵 -> 下�???            } else if (e.key === 'ArrowLeft') {
+                prevPage(); // 左鍵 -> 上�???            }
         });
 
         window.onload = initBook;
@@ -674,373 +657,5 @@
 </body>
 
 </html>
-</html><!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>阿嬤的陽台鄰居 - 繪本故事</title>
-    <style>
-        /* ================= 高齡友善色彩與字體設定 ================= */
-        :root {
-            --bg-color: #FDF8F5;
-            --text-color: #4A3B32;
-            --btn-primary: #F29A62;
-            --btn-primary-hover: #E3874E;
-            --btn-secondary: #87A878;
-            --btn-secondary-hover: #759567;
-            --panel-bg: #FFF4EB;
-            --book-bg: #FFFFFF;
-        }
-
-        body {
-            font-family: "Helvetica Neue", Helvetica, "PingFang TC", "LiHei Pro", "Microsoft JhengHei", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden; /* 防止翻頁時超出螢幕產生水平捲軸 */
-            user-select: none; /* 防止滑動時不小心選取到文字 */
-        }
-
-        /* ================= 繪本舞台 (3D 透視) ================= */
-        .book-stage {
-            perspective: 2000px;
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-            margin-top: 20px;
-        }
-
-        /* 實際的每一頁 */
-        .page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--book-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            
-            /* 翻頁動畫核心設定 */
-            transform-origin: left center;
-            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.7s ease-in-out;
-            backface-visibility: hidden;
-            will-change: transform, opacity;
-            cursor: grab;
-        }
-
-        .page:active {
-            cursor: grabbing;
-        }
-
-        /* 當頁面被翻過去時的狀態 */
-        .page.flipped {
-            transform: rotateY(-90deg) scale(0.95);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* 用來撐開外部容器高度的隱藏層 (解決 absolute 脫離文件流的問題) */
-        .page-dummy {
-            position: relative;
-            visibility: hidden;
-            pointer-events: none;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ================= 頁面內容排版 ================= */
-        .image-area {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: #EAE3DC;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            pointer-events: none; /* 讓滑動事件更容易穿透給 page */
-        }
-
-        .image-placeholder-text {
-            font-size: 28px;
-            color: #A69C95;
-            font-weight: bold;
-            border: 4px dashed #D1C7C0;
-            padding: 20px 40px;
-            border-radius: 16px;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        .text-area {
-            padding: 40px 50px;
-            min-height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            pointer-events: none;
-        }
-
-        .story-text {
-            font-size: 32px;
-            line-height: 1.6;
-            text-align: center;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        /* ================= 操作按鈕 ================= */
-        .controls-container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            padding: 0 20px;
-            box-sizing: border-box;
-            z-index: 100;
-        }
-
-        button {
-            font-family: inherit;
-            font-size: 24px;
-            min-height: 60px;
-            padding: 12px 35px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.1s, background-color 0.2s;
-            font-weight: bold;
-        }
-
-        button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        }
-
-        button:active:not(:disabled) {
-            transform: translateY(1px);
-        }
-
-        button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .btn-prev { background-color: var(--btn-secondary); color: white; }
-        .btn-prev:hover:not(:disabled) { background-color: var(--btn-secondary-hover); }
-
-        .btn-next { background-color: var(--btn-primary); color: white; }
-        .btn-next:hover:not(:disabled) { background-color: var(--btn-primary-hover); }
-
-        .btn-start {
-            background-color: #E76F51;
-            color: white;
-            display: none;
-            animation: popIn 0.5s ease-out forwards;
-        }
-        .btn-start:hover { background-color: #D65A3D; }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .page-indicator {
-            font-size: 20px;
-            color: #A69C95;
-            font-weight: bold;
-        }
-        
-        .swipe-hint {
-            color: #A69C95;
-            font-weight: bold;
-            font-size: 22px;
-            margin-top: 15px;
-            animation: floatLeftRight 3s infinite;
-        }
-
-        @keyframes floatLeftRight {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-10px); }
-        }
-
-    </style>
-</head>
-<body>
-
-    <!-- 3D 繪本舞台 -->
-    <div class="book-stage" id="book-stage">
-        <!-- JS 會在這裡動態生成所有的頁面 -->
-    </div>
-
-    <!-- 底部操作列 -->
-    <div class="swipe-hint" id="swipe-hint">👆 試著向左滑動，或點擊按鈕來翻頁</div>
-    <div class="controls-container">
-        <button id="btn-prev" class="btn-prev" onclick="prevPage()" disabled>⬅️</button>
-        <div class="page-indicator" id="page-indicator">1 / 1</div>
-        <button id="btn-next" class="btn-next" onclick="nextPage()">➡️</button>
-        <button id="btn-start" class="btn-start" onclick="goToGame()">進入阿嬤的陽台 🌻</button>
-    </div>
-
-<script>
-    // ================= 繪本故事內容資料庫 =================
-    const storyPages = [
-        {
-            text: "阿嬤的陽台上，有一座充滿魔法的小花圃。<br>這裡的花兒，都有自己的個性。",
-            imageNote: "【封面圖片】<br>阿嬤微笑看著陽台的花圃"
-        },
-        {
-            text: "「阿嬤，為什麼有些花今天開了，明天卻休息了呢？」<br>阿嬤笑著說：「因為花兒也需要朋友呀！」",
-            imageNote: "【情境圖】<br>主角疑惑地指著一朵休息的花"
-        },
-        {
-            text: "「如果旁邊只有一個朋友，甚至沒有朋友，<br>花兒會覺得太孤單，明天就會先睡個覺。」",
-            imageNote: "【規則 1 - 孤單】<br>一朵孤單的花看起來有點沒精神"
-        },
-        {
-            text: "「但如果旁邊剛好有兩三個好鄰居，<br>大家聊聊天，陪伴剛剛好，花兒就會開心綻放喔！」",
-            imageNote: "【規則 2 - 剛剛好】<br>三四朵花聚在一起開得很漂亮"
-        },
-        {
-            text: "「不過要注意喔，如果旁邊擠了太多朋友...<br>花兒會覺得太擁擠、喘不過氣，明天也要休息。」",
-            imageNote: "【規則 3 - 擁擠】<br>一群花擠在一起，中間的花滿頭大汗"
-        },
-        {
-            text: "「最神奇的是，如果有個空位，<br>旁邊剛好有三個好朋友在呼喚...<br>明天那裡就會奇蹟似地長出新花呢！」",
-            imageNote: "【規則 4 - 誕生】<br>三個花朵圍繞著一個空地，空地發出光芒"
-        },
-        {
-            text: "「大自然的規律是不是很有趣呢？<br>現在，換你來幫阿嬤照顧這些鄰居，<br>猜猜看明天花園會變成什麼樣子吧！」",
-            imageNote: "【結尾圖】<br>阿嬤遞給主角一個園藝小鏟子（或是種子）"
-        }
-    ];
-
-    let currentPage = 0;
-    const stage = document.getElementById('book-stage');
-
-    function initBook() {
-        const dummy = document.createElement('div');
-        dummy.className = 'page-dummy';
-        dummy.innerHTML = `
-            <div class="image-area"></div>
-            <div class="text-area"><p class="story-text">撐高度的文字<br>第二行</p></div>
-        `;
-        stage.appendChild(dummy);
-
-        for (let i = 0; i < storyPages.length; i++) {
-            const pageData = storyPages[i];
-            const pageEl = document.createElement('div');
-            pageEl.className = 'page';
-            pageEl.id = 'page-' + i;
-            pageEl.style.zIndex = storyPages.length - i;
-            
-            pageEl.innerHTML = `
-                <div class="image-area">
-                    <div class="image-placeholder-text">${pageData.imageNote}</div>
-                </div>
-                <div class="text-area">
-                    <p class="story-text">${pageData.text}</p>
-                </div>
-            `;
-            stage.appendChild(pageEl);
-        }
-
-        updateControls();
-    }
-
-    function nextPage() {
-        if (currentPage < storyPages.length - 1) {
-            const currentEl = document.getElementById('page-' + currentPage);
-            currentEl.classList.add('flipped');
-            currentPage++;
-            updateControls();
-        }
-    }
-
-    function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            const prevEl = document.getElementById('page-' + currentPage);
-            prevEl.classList.remove('flipped');
-            updateControls();
-        }
-    }
-
-    function updateControls() {
-        document.getElementById('page-indicator').textContent = `${currentPage + 1} / ${storyPages.length}`;
-        document.getElementById('btn-prev').disabled = (currentPage === 0);
-
-        if (currentPage === storyPages.length - 1) {
-            document.getElementById('btn-next').style.display = 'none';
-            document.getElementById('btn-start').style.display = 'block';
-            document.getElementById('swipe-hint').style.opacity = '0'; // 最後一頁藏起提示
-        } else {
-            document.getElementById('btn-next').style.display = 'block';
-            document.getElementById('btn-start').style.display = 'none';
-            document.getElementById('swipe-hint').style.opacity = '1';
-        }
-    }
-
-    function goToGame() {
-        window.location.href = 'index.html'; 
-    }
-
-    // ================= 滑動翻頁邏輯 (支援滑鼠與觸控) =================
-    let startX = 0;
-    let isDragging = false;
-
-    stage.addEventListener('mousedown', (e) => {
-        startX = e.clientX;
-        isDragging = true;
-    });
-
-    stage.addEventListener('mouseup', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        handleSwipe(startX, e.clientX);
-    });
-
-    stage.addEventListener('mouseleave', (e) => {
-        isDragging = false;
-    });
-
-    stage.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-    });
-
-    stage.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        handleSwipe(startX, e.changedTouches[0].clientX);
-    });
-
-    function handleSwipe(start, end) {
-        const threshold = 40; // 最少滑動 40px 才算觸發
-        if (start - end > threshold) {
-            nextPage(); // 向左滑 -> 下一頁
-        } else if (end - start > threshold) {
-            prevPage(); // 向右滑 -> 上一頁
-        }
-    }
-
-    window.onload = initBook;
-
-</script>
-</body>
 </html>
+
