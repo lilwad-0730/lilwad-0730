@@ -557,8 +557,9 @@
                     page8Result = null; // 重置狀態，下次點擊時會重新檢查
                     
                     const hint = document.getElementById('swipe-hint');
-                    hint.textContent = "👆 請點擊花朵周圍的空地 預測花朵明天的生長🌸";
+                    hint.innerHTML = "👆 請點擊花朵周圍的空地 預測花朵明天的生長🌸<br><span style='font-size: 16px; font-weight: normal;'>（規則：空地旁有3朵花會新生；種子旁有2~3朵花能存活）</span>";
                     hint.style.color = "#A69C95";
+                    hint.style.textAlign = 'center';
                 } else if (currentPage === 9 && page8Result === 'success') {
                     // 成功路線：從第 10 頁 (index 9) 翻頁，進到結局第 11 頁 (index 10)
                     document.getElementById('page-9').classList.add('flipped');
@@ -604,13 +605,15 @@
             hint.style.color = "#A69C95"; // 恢復原本的顏色
 
             if (currentPage === 7 && !isPage8Solved) {
-                hint.textContent = "👆 請點擊花朵周圍的空地 預測花朵明天的生長🌸";
+                hint.innerHTML = "👆 請點擊花朵周圍的空地 預測花朵明天的生長🌸<br><span style='font-size: 16px; font-weight: normal;'>（規則：空地旁有3朵花會新生；種子旁有2~3朵花能存活）</span>";
                 hint.style.opacity = '1';
+                hint.style.textAlign = 'center';
             } else if (currentPage === storyPages.length - 1) {
                 hint.style.opacity = '0'; // 最後一頁藏起提示
             } else {
                 hint.textContent = "👆 試著向左滑動，或點擊按鈕來翻頁";
                 hint.style.opacity = '1';
+                hint.style.textAlign = 'center';
             }
 
             if (currentPage === storyPages.length - 1) {
