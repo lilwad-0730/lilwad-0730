@@ -1227,10 +1227,14 @@
                 pageNumStr = currentPage;
             } else if (currentPage === 16) {
                 pageNumStr = "A";
+            } else if (currentPage === 27) {
+                pageNumStr = "B";
+            } else if (currentPage > 27) {
+                pageNumStr = currentPage - 2;
             } else {
                 pageNumStr = currentPage - 1;
             }
-            const totalPages = storyPages.length - 2;
+            const totalPages = storyPages.length - 3;
             document.getElementById('page-indicator').textContent = `${pageNumStr} / ${totalPages}`;
             document.getElementById('btn-prev').disabled = (currentPage === 0);
 
