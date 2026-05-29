@@ -1343,6 +1343,8 @@
         }
 
         function updateControls() {
+            updatePageVisibility();
+
             let pageNumStr = "";
             if (currentPage < 16) {
                 pageNumStr = currentPage;
@@ -1401,6 +1403,19 @@
                 }
             } else {
                 document.getElementById('btn-next').style.display = 'block';
+            }
+        }
+
+        // 動態更新頁面顯示狀態，僅保留當前頁與前後相鄰頁，其他設定為 display: none 釋放 GPU 記憶體，防止縮放當機
+        function updatePageVisibility() {
+            for (let i = 0; i < storyPages.length; i++) {
+                const pageEl = document.getElementById('page-' + i);
+                if (!pageEl) continue;
+                if (i === currentPage || i === currentPage - 1 || i === currentPage + 1) {
+                    pageEl.style.display = 'flex';
+                } else {
+                    pageEl.style.display = 'none';
+                }
             }
         }
 
