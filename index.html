@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>阿嬤的大花盆 - 繪本故事</title>
     <style>
         /* ================= 高齡友善色彩與字體設定 ================= */
@@ -1407,6 +1407,7 @@
         // ================= 滑動翻頁邏輯 (支援滑鼠與觸控) =================
         let startX = 0;
         let isDragging = false;
+        let isMultiTouch = false;
 
         stage.addEventListener('mousedown', (e) => {
             startX = e.clientX;
@@ -1424,14 +1425,36 @@
         });
 
         stage.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) {
+                // 雙指觸控（如縮放）時，阻止預設縮放行為以防止 3D 渲染當機
+                e.preventDefault();
+                isMultiTouch = true;
+                isDragging = false;
+                return;
+            }
+            isMultiTouch = false;
             startX = e.touches[0].clientX;
             isDragging = true;
-        });
+        }, { passive: false });
+
+        stage.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+                isMultiTouch = true;
+                isDragging = false;
+            }
+        }, { passive: false });
 
         stage.addEventListener('touchend', (e) => {
+            if (isMultiTouch) {
+                isDragging = false;
+                return;
+            }
             if (!isDragging) return;
             isDragging = false;
-            handleSwipe(startX, e.changedTouches[0].clientX);
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                handleSwipe(startX, e.changedTouches[0].clientX);
+            }
         });
 
         function handleSwipe(start, end) {
