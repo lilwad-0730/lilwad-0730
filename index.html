@@ -221,6 +221,12 @@
             pointer-events: none;
         }
 
+        .interactive-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         @keyframes shake {
 
             0%,
@@ -675,6 +681,18 @@
                 font-size: 7px !important;
                 margin-top: 0 !important;
                 padding: 0 2px !important;
+            }
+            /* 縮小手機上 Page B 預測選中後的櫻花標記大小與過關後的花朵大小 */
+            .interactive-cell.active::after {
+                width: 16px !important;
+                height: 16px !important;
+                font-size: 10px !important;
+                top: -6px !important;
+                right: -6px !important;
+            }
+            .interactive-cell img {
+                width: 70% !important;
+                height: 70% !important;
             }
         }
 
@@ -1300,7 +1318,7 @@
                     
                     if (playerGrid[r][c] === 1) {
                         let imgNum = Math.random() > 0.5 ? 1 : 2;
-                        cell.innerHTML = `<img src="flower/${imgNum}.png" style="width: 100%; height: 100%; object-fit: contain; animation: popIn 0.5s ease-out;">`;
+                        cell.innerHTML = `<img src="flower/${imgNum}.png" style="animation: popIn 0.5s ease-out;">`;
                     }
                     index++;
                 }
