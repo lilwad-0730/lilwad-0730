@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=4.0, user-scalable=yes">
     <title>阿嬤的大花盆 - 繪本故事</title>
     <style>
         /* ================= 高齡友善色彩與字體設定 ================= */
@@ -1426,8 +1426,8 @@
 
         stage.addEventListener('touchstart', (e) => {
             if (e.touches.length > 1) {
-                // 雙指觸控（如縮放）時，阻止預設縮放行為以防止 3D 渲染當機
-                e.preventDefault();
+                // 雙指觸控（如縮放）時，標記為多指手勢並取消單指拖拽翻頁
+                // 不執行 preventDefault() 以允許瀏覽器原生縮放
                 isMultiTouch = true;
                 isDragging = false;
                 return;
@@ -1435,19 +1435,22 @@
             isMultiTouch = false;
             startX = e.touches[0].clientX;
             isDragging = true;
-        }, { passive: false });
+        });
 
         stage.addEventListener('touchmove', (e) => {
             if (e.touches.length > 1) {
-                e.preventDefault();
                 isMultiTouch = true;
                 isDragging = false;
             }
-        }, { passive: false });
+        });
 
         stage.addEventListener('touchend', (e) => {
             if (isMultiTouch) {
                 isDragging = false;
+                // 當所有手指都離開螢幕時，才重設 isMultiTouch
+                if (e.touches.length === 0) {
+                    isMultiTouch = false;
+                }
                 return;
             }
             if (!isDragging) return;
@@ -1458,6 +1461,10 @@
         });
 
         function handleSwipe(start, end) {
+            // 如果視窗已被放大，停用單指滑動翻頁，讓使用者能用單指拖曳平移畫面
+            if (window.visualViewport && window.visualViewport.scale > 1.05) {
+                return;
+            }
             const threshold = 40; // 最少滑動 40px 才算觸發
             if (start - end > threshold) {
                 nextPage(); // 向左滑 -> 下一頁
