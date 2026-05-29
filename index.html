@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>阿嬤的陽台鄰居 - 繪本故事</title>
+    <title>阿嬤的大花盆 - 繪本故事</title>
     <style>
         /* ================= 高齡友善色彩與字體設定 ================= */
         :root {
@@ -16,6 +16,48 @@
             --btn-secondary-hover: #759567;
             --panel-bg: #FFF4EB;
             --book-bg: #FFFFFF;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1.book-title {
+            font-size: 42px;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(135deg, #E28743, #769766);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            letter-spacing: 2px;
+            filter: drop-shadow(1px 2px 3px rgba(74, 59, 50, 0.15));
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        h1.book-title:hover {
+            transform: scale(1.05);
+        }
+
+        .book-subtitle {
+            font-size: 16px;
+            color: #8E7A6B;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background: rgba(135, 168, 120, 0.1);
+            padding: 4px 16px;
+            border-radius: 20px;
+            border: 1px dashed rgba(135, 168, 120, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         body {
@@ -125,8 +167,8 @@
             /* 橫向長方形 8:4 */
 
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            grid-template-rows: repeat(4, 1fr);
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(4, minmax(0, 1fr));
             gap: 0%;
             /* 格子之間的空隙 (原本是 2%，已調小，可改為 0% 讓格子完全貼合) */
             z-index: 10;
@@ -137,17 +179,19 @@
         .interactive-cell {
             box-sizing: border-box;
             background-color: transparent; /* 完全透明，不遮擋背景 */
-            border: 1px dashed rgba(255, 255, 255, 0.25);
+            border: 4px dashed rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 4.8cqw;
             line-height: 1;
             overflow: visible; /* 讓右上角的標記可以完整超出邊界顯示 */
             user-select: none;
             transition: all 0.2s;
+            min-width: 0;
+            min-height: 0;
         }
 
         .interactive-cell:hover {
@@ -199,8 +243,8 @@
 
         .interactive-cell.error-mark {
             animation: shake 0.4s;
-            border: 4px solid #E76F51 !important;
-            background-color: rgba(231, 111, 81, 0.3) !important;
+            border: 4px solid #FFA500 !important;
+            background-color: rgba(255, 165, 0, 0.25) !important;
         }
 
         /* ================= 操作按鈕 ================= */
@@ -272,7 +316,7 @@
             color: #A69C95;
             font-weight: bold;
             font-size: 22px;
-            margin-top: 15px;
+            margin-top: 35px;
             animation: floatLeftRight 3s infinite;
         }
 
@@ -588,6 +632,11 @@
 
 <body>
 
+    <div class="header-container">
+        <h1 class="book-title">阿嬤的大花盆</h1>
+        <div class="book-subtitle">🌱 綠意盎然的陽台互動繪本故事 🌸</div>
+    </div>
+
     <!-- 3D 繪本舞台 -->
     <div class="book-stage" id="book-stage">
         <!-- JS 會在這裡動態生成所有的頁面 -->
@@ -759,7 +808,7 @@
         // ================= 第 A 頁 排程遊戲 logic =================
         const TIMELINE_TRIPS = [
             {id:'A',name:'逛種子攤',start:780,end:840,type:'side',tag:'支線',color:'color-seed'},
-            {id:'B',name:'買晚餐',start:780,end:810,type:'side',tag:'支線',color:'color-breakfast'},
+            {id:'B',name:'買食材',start:780,end:810,type:'side',tag:'支線',color:'color-breakfast'},
             {id:'C',name:'肥料老闆A',start:840,end:960,type:'required',tag:'必備：肥料',color:'color-fertilizer-a',provides:'fertilizer',trap:true},
             {id:'D',name:'肥料老闆B',start:840,end:870,type:'required',tag:'必備：肥料',color:'color-fertilizer-b',provides:'fertilizer'},
             {id:'E',name:'買驅蟲藥',start:870,end:930,type:'required',tag:'必備：驅蟲藥',color:'color-pest',provides:'pest'},
@@ -1089,7 +1138,7 @@
                 }
             }
 
-            // 標註錯誤紅框
+            // 標註錯誤橘框
             index = 0;
             for (let r = 0; r < 4; r++) {
                 for (let c = 0; c < 8; c++) {
@@ -1111,21 +1160,16 @@
             }
 
             if (!isCorrect) {
-                hint.textContent = "🌸 哎呀，預測有衝突（紅框表示點錯位置或太擠相鄰，請修改重試）";
+                hint.textContent = "🌸 哎呀，預測有衝突（橘色框框表示點錯位置或太擠相鄰，請修改重試）";
                 hint.style.color = "#E76F51";
                 page8Result = 'fail';
                 return;
             }
 
-            if (activeCount < 5) {
-                hint.textContent = `🌸 安排的開花數量不夠（目前 ${activeCount} 朵，至少需安排 5 朵花開花喔！）`;
-                hint.style.color = "#E76F51";
-                page8Result = 'fail';
-                return;
-            }
+
 
             // 2. 檢查是否為 Maximal（是否還有其他花苗可以被預測）
-            let canAddMore = false;
+            let eligibleSpotsCount = 0;
             for (let r = 0; r < 4; r++) {
                 for (let c = 0; c < 8; c++) {
                     if (page8InitialGrid[r][c] === 1 && playerGrid[r][c] === 0) {
@@ -1142,15 +1186,14 @@
                             }
                         }
                         if (!hasAdjacentActive) {
-                            canAddMore = true;
-                            break;
+                            eligibleSpotsCount++;
                         }
                     }
                 }
             }
 
-            if (canAddMore) {
-                hint.textContent = "🌸 還有花苗可以被點選開花喔，再找找看哪裡還能開花吧！";
+            if (eligibleSpotsCount > 0) {
+                hint.textContent = `🌸 還有花苗可以被點選開花喔，再找找看吧！（還剩下 ${eligibleSpotsCount} 個位置可以點選開花喔！）`;
                 hint.style.color = "#E76F51";
                 page8Result = 'fail';
                 return;
@@ -1254,7 +1297,7 @@
                 }
             } else if (currentPage === INTERACTIVE_PAGE_INDEX) {
                 if (!isPage8Solved) {
-                    hint.innerHTML = "👆 請點擊預測明天能順利成長的花苗 🌱（至少需安排 5 朵花）<br><span style='font-size: 16px; font-weight: normal;'>（規則：開花處需在花苗上，且上下左右不相鄰，並讓所有花苗都能獲得陪伴）</span>";
+                    hint.innerHTML = "👆 請點擊預測明天能順利成長的花苗 🌱<br><span style='font-size: 16px; font-weight: normal;'>（規則：開花處需在花苗上，且上下左右不相鄰，並讓所有花苗都能獲得陪伴）</span>";
                     hint.style.opacity = '1';
                     hint.style.textAlign = 'center';
                 } else {
