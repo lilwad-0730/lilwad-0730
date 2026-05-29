@@ -337,14 +337,14 @@
             position: absolute;
             left: 22.4%;
             width: 35.0%;
-            top: 11.7cqw;
-            height: 51.1cqw;
-            padding: 1.5cqw 1.8cqw;
+            top: 15.6%;
+            height: 68.1%;
+            padding: 12px 14px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            gap: 0.9cqw;
+            gap: 7px;
             z-index: 10;
             pointer-events: auto;
             font-family: 'Noto Sans TC', sans-serif;
@@ -353,7 +353,7 @@
         }
 
         .timeline-overlay h2 {
-            font-size: 1.9cqw;
+            font-size: 15px;
             margin: 0;
             color: #4A3B32;
             text-align: center;
@@ -363,20 +363,20 @@
 
         .timeline-overlay h2 span {
             display: block;
-            font-size: 1.3cqw;
+            font-size: 10px;
             color: #87A878;
             font-weight: normal;
-            margin-top: 0.225cqw;
+            margin-top: 2px;
         }
 
         /* 頂部狀態面板 */
         .timeline-status-panel {
             display: flex;
             flex-direction: column;
-            gap: 0.45cqw;
+            gap: 4px;
             background: transparent;
             border-bottom: 1px dashed rgba(74, 59, 50, 0.2);
-            padding-bottom: 0.75cqw;
+            padding-bottom: 6px;
             width: 100%;
             box-sizing: border-box;
         }
@@ -384,8 +384,8 @@
         .timeline-status-item {
             display: flex;
             align-items: center;
-            gap: 1.2cqw;
-            font-size: 1.4cqw;
+            gap: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: #5c4a3c;
         }
@@ -396,13 +396,13 @@
 
         .timeline-status-item .chk {
             display: inline-block;
-            width: 2.1cqw;
-            height: 2.1cqw;
+            width: 17px;
+            height: 17px;
             border: 1px solid #A69C95;
             border-radius: 50%;
             text-align: center;
-            line-height: 2.0cqw;
-            font-size: 1.3cqw;
+            line-height: 16px;
+            font-size: 10px;
             box-sizing: border-box;
         }
 
@@ -422,18 +422,18 @@
         .time-labels {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.375cqw;
+            margin-bottom: 3px;
         }
 
         .time-label {
-            font-size: 1.2cqw;
+            font-size: 10px;
             color: #8E7A6B;
             font-weight: bold;
         }
 
         .gantt-track {
             position: relative;
-            height: 3.2cqw;
+            height: 26px;
             background: rgba(74, 59, 50, 0.08);
             border-radius: 4px;
             border: 1px solid rgba(74, 59, 50, 0.18);
@@ -476,7 +476,7 @@
             top: 50%;
             transform: translateY(-50%);
             right: 2px;
-            font-size: 1.1cqw;
+            font-size: 9px;
             color: #E76F51;
             font-weight: bold;
             writing-mode: vertical-rl;
@@ -484,14 +484,14 @@
 
         .gantt-block {
             position: absolute;
-            top: 0.3cqw;
-            height: 2.6cqw;
+            top: 2px;
+            height: 21px;
             border-radius: 3px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2cqw;
+            font-size: 10px;
             font-weight: bold;
             color: #fff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12);
@@ -523,15 +523,15 @@
         .trips-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.0cqw;
-            margin-top: 0.225cqw;
+            gap: 6px;
+            margin-top: 4px;
         }
 
         .trip-card {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(74, 59, 50, 0.15);
             border-radius: 5px;
-            padding: 0.8cqw 1.0cqw;
+            padding: 6px 8px;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
@@ -539,7 +539,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 5.0cqw;
+            min-height: 48px;
             box-sizing: border-box;
         }
 
@@ -568,25 +568,25 @@
         .trip-card.type-side::before { background: #8b6faa; }
 
         .trip-name {
-            font-size: 1.3cqw;
+            font-size: 13px;
             font-weight: bold;
             color: #4A3B32;
-            margin-bottom: 0.2cqh;
+            margin-bottom: 2px;
             line-height: 1.1;
         }
 
         .trip-time {
-            font-size: 1.1cqw;
+            font-size: 11px;
             color: #8E7A6B;
         }
 
         .trip-tag {
-            font-size: 0.9cqw;
+            font-size: 10px;
             padding: 1px 3px;
             border-radius: 4px;
             align-self: flex-start;
             font-weight: bold;
-            margin-top: 0.3cqh;
+            margin-top: 2px;
             line-height: 1;
         }
 
@@ -598,6 +598,76 @@
         .trip-card.type-side .trip-tag {
             background: rgba(139, 111, 170, 0.12);
             color: #8b6faa;
+        }
+
+        /* 手機版專屬響應式調整 */
+        @media (max-width: 600px) {
+            .timeline-overlay {
+                left: 5% !important;
+                width: 90% !important;
+                top: 4% !important;
+                height: 92% !important;
+                background: rgba(253, 248, 245, 0.98) !important;
+                border: 2px solid rgba(135, 168, 120, 0.4);
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                padding: 10px 12px !important;
+                gap: 6px !important;
+            }
+            .timeline-overlay h2 {
+                font-size: 15px !important;
+            }
+            .timeline-overlay h2 span {
+                font-size: 10px !important;
+                margin-top: 2px !important;
+            }
+            .timeline-status-panel {
+                gap: 3px !important;
+                padding-bottom: 4px !important;
+            }
+            .timeline-status-item {
+                font-size: 11px !important;
+                gap: 8px !important;
+            }
+            .timeline-status-item .chk {
+                width: 15px !important;
+                height: 15px !important;
+                line-height: 14px !important;
+                font-size: 9px !important;
+            }
+            .time-labels {
+                margin-bottom: 2px !important;
+            }
+            .time-label {
+                font-size: 10px !important;
+            }
+            .gantt-track {
+                height: 24px !important;
+            }
+            .gantt-noon::after {
+                font-size: 8px !important;
+            }
+            .gantt-block {
+                top: 2px !important;
+                height: 20px !important;
+                font-size: 9px !important;
+            }
+            .trips-grid {
+                gap: 5px !important;
+            }
+            .trip-card {
+                min-height: 44px !important;
+                padding: 4px 6px !important;
+            }
+            .trip-name {
+                font-size: 12px !important;
+            }
+            .trip-time {
+                font-size: 10px !important;
+            }
+            .trip-tag {
+                font-size: 9px !important;
+            }
         }
 
         /* 衝突抖動動畫 */
