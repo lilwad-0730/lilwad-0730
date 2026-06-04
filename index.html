@@ -1335,6 +1335,14 @@
                 if (hint) {
                     hint.textContent = "⚠️ 請先幫阿嬤完成早市行程排表才能翻頁喔！";
                     hint.style.color = "#E76F51";
+                    
+                    // 2 秒後恢復成原本的提示文字與顏色
+                    setTimeout(() => {
+                        if (currentPage === 16 && !isPageASolved) {
+                            hint.textContent = "👆 點擊下方卡片排入時間軸（行程選項可以往下滑動進行選擇），點選時間軸上的項目可移除";
+                            hint.style.color = "#A69C95";
+                        }
+                    }, 2000);
                 }
                 return;
             }
