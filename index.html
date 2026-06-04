@@ -1491,7 +1491,8 @@
             }
             const totalPages = storyPages.length - 6;
             document.getElementById('page-indicator').textContent = `${pageNumStr} / ${totalPages}`;
-            document.getElementById('btn-prev').disabled = (currentPage === 0);
+            document.getElementById('btn-prev').disabled = (currentPage === 0 || isTransitioningFail);
+            document.getElementById('btn-next').disabled = isTransitioningFail;
 
             const hint = document.getElementById('swipe-hint');
             hint.style.color = "#A69C95"; // 恢復原本的顏色
