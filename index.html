@@ -658,29 +658,30 @@
                 font-size: 8px !important;
             }
             .trips-grid {
-                grid-template-columns: 1fr !important;
-                gap: 3px !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 4px !important;
             }
             .trip-card {
-                min-height: auto !important;
-                height: 24px !important;
-                padding: 2px 4px !important;
-                flex-direction: row !important;
-                align-items: center !important;
+                min-height: 42px !important;
+                height: auto !important;
+                padding: 4px 5px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
                 justify-content: space-between !important;
             }
             .trip-name {
-                font-size: 8px !important;
-                margin-bottom: 0 !important;
-                line-height: 1 !important;
+                font-size: 9px !important;
+                margin-bottom: 1px !important;
+                line-height: 1.1 !important;
             }
             .trip-time {
-                font-size: 7px !important;
+                font-size: 8px !important;
             }
             .trip-tag {
                 font-size: 7px !important;
-                margin-top: 0 !important;
-                padding: 0 2px !important;
+                margin-top: 1px !important;
+                padding: 0px 2px !important;
+                align-self: flex-start !important;
             }
             /* 縮小手機上 Page B 預測選中後的櫻花標記大小與過關後的花朵大小 */
             .interactive-cell.active::after {
