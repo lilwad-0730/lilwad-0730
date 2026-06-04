@@ -754,6 +754,7 @@
         let page8Answer = [];
         let isPage8Solved = false;
         let page8Result = null; // 紀錄過關或失敗
+        let isTransitioningFail = false;
 
         // 自動產生隨機謎題
         function generateRandomPage8Puzzle() {
@@ -769,6 +770,53 @@
             }
         }
         generateRandomPage8Puzzle(); // 遊戲載入時先生成一次
+
+        function rebuildPage8Grid() {
+            const gridContainer = document.getElementById('grid-page-8');
+            if (!gridContainer) return;
+            
+            let cellsHtml = '';
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 8; c++) {
+                    if (page8InitialGrid[r][c] === 1) {
+                        // 初始有種子：可點擊，加入標記表示預測它會開花 (存活)
+                        cellsHtml += `<div class="interactive-cell flower" style="background-color: transparent; border-color: transparent;" onclick="if(isPage8Solved || isTransitioningFail) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;">🌱</div>`;
+                    } else {
+                        // 初始為空：點擊可放花朵標記 (預測新生開花)
+                        cellsHtml += `<div class="interactive-cell" onclick="if(isPage8Solved || isTransitioningFail) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;"></div>`;
+                    }
+                }
+            }
+            gridContainer.innerHTML = cellsHtml;
+        }
+
+        function resetPage8() {
+            isPage8Solved = false;
+            page8Result = null;
+            isTransitioningFail = false;
+            generateRandomPage8Puzzle();
+            rebuildPage8Grid();
+        }
+
+        function triggerFailSequence() {
+            if (isTransitioningFail) return;
+            isTransitioningFail = true;
+            
+            // 禁用 Next/Prev 按鈕，避免重疊操作
+            document.getElementById('btn-next').disabled = true;
+            document.getElementById('btn-prev').disabled = true;
+            
+            setTimeout(() => {
+                isTransitioningFail = false;
+                // 翻往下一頁 B-1 (index 28)
+                const currentEl = document.getElementById('page-27');
+                if (currentEl) {
+                    currentEl.classList.add('flipped');
+                }
+                currentPage = 28;
+                updateControls();
+            }, 2000);
+        }
 
         // ================= 繪本故事內容資料庫 (共 28 頁) =================
         const storyPages = [
@@ -883,6 +931,18 @@
             {
                 text: "（互動頁面：設計出您心目中的完美花園吧！）",
                 imageSrc: "屁眼派對/B.png"
+            },
+            {
+                text: "",
+                imageSrc: "屁眼派對/B-1.png"
+            },
+            {
+                text: "",
+                imageSrc: "屁眼派對/B-2.png"
+            },
+            {
+                text: "",
+                imageSrc: "屁眼派對/B-3.png"
             },
             {
                 text: "孫子將花朵們的位置都擺好了，阿嬤也把晚餐煮好了。",
@@ -1110,21 +1170,8 @@
                 let interactiveOverlay = '';
                 // 如果是互動頁面，就插入 4x4 的互動方格
                 if (i === INTERACTIVE_PAGE_INDEX) {
-                    let cellsHtml = '';
-                    for (let r = 0; r < 4; r++) {
-                        for (let c = 0; c < 8; c++) {
-                            if (page8InitialGrid[r][c] === 1) {
-                                // 初始有種子：可點擊，加入標記表示預測它會開花 (存活)
-                                cellsHtml += `<div class="interactive-cell flower" style="background-color: transparent; border-color: transparent;" onclick="if(isPage8Solved) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;">🌱</div>`;
-                            } else {
-                                // 初始為空：點擊可放花朵標記 (預測新生開花)
-                                cellsHtml += `<div class="interactive-cell" onclick="if(isPage8Solved) return; this.classList.toggle('active'); this.classList.remove('error-mark'); page8Result = null;"></div>`;
-                            }
-                        }
-                    }
                     interactiveOverlay = `
                     <div class="interactive-grid-container" id="grid-page-8">
-                        ${cellsHtml}
                     </div>
                 `;
                 } else if (i === 16) {
@@ -1181,6 +1228,7 @@
                 stage.appendChild(pageEl);
             }
 
+            rebuildPage8Grid();
             updateControls();
             
             // 初始化時間軸遊戲畫面
@@ -1254,6 +1302,7 @@
                 hint.textContent = "🌸 請先點擊花苗 🌱 預測明天開花的位置喔！";
                 hint.style.color = "#E76F51";
                 page8Result = 'fail';
+                triggerFailSequence();
                 return;
             }
 
@@ -1261,6 +1310,7 @@
                 hint.textContent = "🌸 哎呀，預測有衝突（橘色框框表示點錯位置或太擠相鄰，請修改重試）";
                 hint.style.color = "#E76F51";
                 page8Result = 'fail';
+                triggerFailSequence();
                 return;
             }
 
@@ -1294,6 +1344,7 @@
                 hint.textContent = `🌸 還有花苗可以被點選開花喔，再找找看吧！（還剩下 ${eligibleSpotsCount} 個位置可以點選開花喔！）`;
                 hint.style.color = "#E76F51";
                 page8Result = 'fail';
+                triggerFailSequence();
                 return;
             }
 
@@ -1329,6 +1380,8 @@
         }
 
         function nextPage() {
+            if (isTransitioningFail) return;
+
             // 如果是第 A 頁 (索引 16) 且尚未完成排程任務，攔截翻頁
             if (currentPage === 16 && !isPageASolved) {
                 const hint = document.getElementById('swipe-hint');
@@ -1353,19 +1406,64 @@
                 return;
             }
 
+            // 如果在 B-3 (索引 30)，下一步應該重置遊戲並回到 B 頁 (27)
+            if (currentPage === 30) {
+                resetPage8();
+                const p29 = document.getElementById('page-29');
+                const p28 = document.getElementById('page-28');
+                const p27 = document.getElementById('page-27');
+                if (p29) p29.classList.remove('flipped');
+                if (p28) p28.classList.remove('flipped');
+                if (p27) p27.classList.remove('flipped');
+                currentPage = 27;
+                updateControls();
+                return;
+            }
+
             if (currentPage < storyPages.length - 1) {
                 const currentEl = document.getElementById('page-' + currentPage);
-                currentEl.classList.add('flipped');
-                currentPage++;
+                if (currentEl) {
+                    currentEl.classList.add('flipped');
+                }
+                
+                // 如果是從 27 頁 (Page B) 成功進入下一頁，直接跳過 B-1, B-2, B-3 到 31 頁
+                if (currentPage === 27 && isPage8Solved) {
+                    const p28 = document.getElementById('page-28');
+                    const p29 = document.getElementById('page-29');
+                    const p30 = document.getElementById('page-30');
+                    if (p28) p28.classList.add('flipped');
+                    if (p29) p29.classList.add('flipped');
+                    if (p30) p30.classList.add('flipped');
+                    currentPage = 31;
+                } else {
+                    currentPage++;
+                }
                 updateControls();
             }
         }
 
         function prevPage() {
+            if (isTransitioningFail) return;
+
             if (currentPage > 0) {
-                currentPage--;
-                const prevEl = document.getElementById('page-' + currentPage);
-                prevEl.classList.remove('flipped');
+                // 如果是從 31 頁 (Success Page 1) 回上一頁，直接跳過 B-3, B-2, B-1 回到 27 頁
+                if (currentPage === 31) {
+                    const p30 = document.getElementById('page-30');
+                    const p29 = document.getElementById('page-29');
+                    const p28 = document.getElementById('page-28');
+                    const p27 = document.getElementById('page-27');
+                    if (p30) p30.classList.remove('flipped');
+                    if (p29) p29.classList.remove('flipped');
+                    if (p28) p28.classList.remove('flipped');
+                    currentPage = 27;
+                    if (p27) p27.classList.remove('flipped');
+                } else {
+                    currentPage--;
+                    const prevEl = document.getElementById('page-' + currentPage);
+                    if (prevEl) {
+                        prevEl.classList.remove('flipped');
+                    }
+                }
                 updateControls();
             }
         }
@@ -1380,12 +1478,18 @@
                 pageNumStr = "A";
             } else if (currentPage === 27) {
                 pageNumStr = "B";
-            } else if (currentPage > 27) {
-                pageNumStr = currentPage - 2;
+            } else if (currentPage === 28) {
+                pageNumStr = "B-1";
+            } else if (currentPage === 29) {
+                pageNumStr = "B-2";
+            } else if (currentPage === 30) {
+                pageNumStr = "B-3";
+            } else if (currentPage > 30) {
+                pageNumStr = currentPage - 5;
             } else {
                 pageNumStr = currentPage - 1;
             }
-            const totalPages = storyPages.length - 3;
+            const totalPages = storyPages.length - 6;
             document.getElementById('page-indicator').textContent = `${pageNumStr} / ${totalPages}`;
             document.getElementById('btn-prev').disabled = (currentPage === 0);
 
@@ -1414,6 +1518,10 @@
                     hint.style.opacity = '1';
                     hint.style.textAlign = 'center';
                 }
+            } else if (currentPage === 28 || currentPage === 29 || currentPage === 30) {
+                hint.textContent = "👆 答錯了喔！點擊按鈕或滑動看提示";
+                hint.style.opacity = '1';
+                hint.style.textAlign = 'center';
             } else if (currentPage === storyPages.length - 1) {
                 hint.style.opacity = '0'; // 最後一頁藏起提示
             } else {
@@ -1439,7 +1547,17 @@
             for (let i = 0; i < storyPages.length; i++) {
                 const pageEl = document.getElementById('page-' + i);
                 if (!pageEl) continue;
+                
+                let isVisible = false;
                 if (i === currentPage || i === currentPage - 1 || i === currentPage + 1) {
+                    isVisible = true;
+                }
+                // Keep pages 27 to 31 visible if currentPage is between 27 and 31
+                if (currentPage >= 27 && currentPage <= 31 && i >= 27 && i <= 31) {
+                    isVisible = true;
+                }
+                
+                if (isVisible) {
                     pageEl.style.display = 'flex';
                 } else {
                     pageEl.style.display = 'none';
