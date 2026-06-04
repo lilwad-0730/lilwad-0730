@@ -1100,7 +1100,8 @@
                 pageEl.style.zIndex = storyPages.length - i;
                 let imageContent = '';
                 if (pageData.imageSrc) {
-                    imageContent = `<img src="${pageData.imageSrc}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;" alt="繪本圖片">`;
+                    // 加上快取清除參數 (cache buster) 確保修改後的圖片能被瀏覽器即時重新載入
+                    imageContent = `<img src="${pageData.imageSrc}?v=20260605" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;" alt="繪本圖片">`;
                 } else {
                     imageContent = `<div style="width: 100%; height: 100%; border-radius: 20px;"></div>`;
                 }
